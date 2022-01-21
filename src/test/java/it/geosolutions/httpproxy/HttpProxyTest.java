@@ -67,7 +67,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
  */
 public class HttpProxyTest extends Mockito {
 
-    private final int localPort = 8090;
+    private final int localPort = 8080;
 
     @Rule
     public WireMockRule wireMockRule =

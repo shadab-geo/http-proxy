@@ -90,14 +90,14 @@ public class HTTPProxy extends HttpServlet {
      */
     private PoolingHttpClientConnectionManager connectionManager;
 
-    HttpClientBuilder clientBuilder ;
+    HttpClientBuilder clientBuilder;
     /**
      * An HTTP "user-agent", containing an HTTP state and one or more HTTP connections, to which HTTP methods can be applied.
      */
     private HttpClient httpClient;
 
 
-	/**
+    /**
      * The proxy configuration.
      */
     private ProxyConfig proxyConfig;
@@ -108,6 +108,7 @@ public class HTTPProxy extends HttpServlet {
     private List<ProxyCallback> callbacks;
 
     private BasicCredentialsProvider credsProvider = null;
+
     /**
      * Initialize the <code>ProxyServlet</code>
      *
@@ -143,14 +144,14 @@ public class HTTPProxy extends HttpServlet {
         if (httpClient != null)
             return httpClient;
 
-        clientBuilder = HttpClientBuilder.create() ;
+        clientBuilder = HttpClientBuilder.create();
         if (credsProvider != null) {
             clientBuilder.setDefaultCredentialsProvider(credsProvider);
         }
 
         HttpHost httpHost = getHost("http.proxyHost", "http.proxyPort");
         if (httpHost != null) {
-            HttpRoutePlanner routePlanner = new DefaultProxyRoutePlanner(httpHost){
+            HttpRoutePlanner routePlanner = new DefaultProxyRoutePlanner(httpHost) {
                 @Override
                 public HttpRoute determineRoute(
                         final HttpHost host,
@@ -203,7 +204,7 @@ public class HTTPProxy extends HttpServlet {
             StringTokenizer tokenizer = new StringTokenizer(nonProxyHostProp, "|");
             while (tokenizer.hasMoreTokens()) {
                 String str = tokenizer.nextToken().trim();
-                str = str.replace("*","\\w*");
+                str = str.replace("*", "\\w*");
                 Pattern pattern = Pattern.compile(str);
                 Matcher matcher = pattern.matcher(host);
                 if (matcher.matches()) {
@@ -249,7 +250,7 @@ public class HTTPProxy extends HttpServlet {
     /**
      * Performs an HTTP GET request
      *
-     * @param httpServletRequest The {@link HttpServletRequest} object passed in by the servlet engine representing the client request to be proxied
+     * @param httpServletRequest  The {@link HttpServletRequest} object passed in by the servlet engine representing the client request to be proxied
      * @param httpServletResponse The {@link HttpServletResponse} object by which we can send a proxied response to the client
      */
     public void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
@@ -301,27 +302,27 @@ public class HTTPProxy extends HttpServlet {
         }
     }
 
-	protected HttpGet getGetMethod(URL url) {
-		return new HttpGet(url.toExternalForm());
-	}
+    protected HttpGet getGetMethod(URL url) {
+        return new HttpGet(url.toExternalForm());
+    }
 
     /**
      * Performs an HTTP POST request
      *
-     * @param httpServletRequest The {@link HttpServletRequest} object passed in by the servlet engine representing the client request to be proxied
+     * @param httpServletRequest  The {@link HttpServletRequest} object passed in by the servlet engine representing the client request to be proxied
      * @param httpServletResponse The {@link HttpServletResponse} object by which we can send a proxied response to the client
      */
     public void doPost(HttpServletRequest httpServletRequest,
-            HttpServletResponse httpServletResponse) throws IOException, ServletException {
+                       HttpServletResponse httpServletResponse) throws IOException, ServletException {
         try {
 
             URL url = null;
             String user = null, password = null;
             //Parse the queryString to not read the request body calling getParameter from httpServletRequest
             // so the method can simply forward the request body
-            Map<String,String> pars=  splitQuery(httpServletRequest.getQueryString());
+            Map<String, String> pars = splitQuery(httpServletRequest.getQueryString());
 
-            for (String  key : pars.keySet()) {
+            for (String key : pars.keySet()) {
 
                 String value = pars.get(key);
 
@@ -376,7 +377,7 @@ public class HTTPProxy extends HttpServlet {
     /**
      * Performs an HTTP PUT request
      *
-     * @param httpServletRequest The {@link HttpServletRequest} object passed in by the servlet engine representing the client request to be proxied
+     * @param httpServletRequest  The {@link HttpServletRequest} object passed in by the servlet engine representing the client request to be proxied
      * @param httpServletResponse The {@link HttpServletResponse} object by which we can send a proxied response to the client
      */
     public void doPut(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
@@ -386,11 +387,11 @@ public class HTTPProxy extends HttpServlet {
 
             URL url = null;
             String user = null, password = null;
-          //Parse the queryString to not read the request body calling getParameter from httpServletRequest
+            //Parse the queryString to not read the request body calling getParameter from httpServletRequest
             // so the method can simply forward the request body
-            Map<String,String> pars=  splitQuery(httpServletRequest.getQueryString());
+            Map<String, String> pars = splitQuery(httpServletRequest.getQueryString());
 
-            for (String  key : pars.keySet()) {
+            for (String key : pars.keySet()) {
 
                 String value = pars.get(key);
 
@@ -442,20 +443,20 @@ public class HTTPProxy extends HttpServlet {
     /**
      * Performs an HTTP DELETE request
      *
-     * @param httpServletRequest The {@link HttpServletRequest} object passed in by the servlet engine representing the client request to be proxied
+     * @param httpServletRequest  The {@link HttpServletRequest} object passed in by the servlet engine representing the client request to be proxied
      * @param httpServletResponse The {@link HttpServletResponse} object by which we can send a proxied response to the client
      */
     public void doDelete(HttpServletRequest httpServletRequest,
-            HttpServletResponse httpServletResponse) throws IOException, ServletException {
+                         HttpServletResponse httpServletResponse) throws IOException, ServletException {
 
         try {
             URL url = null;
             String user = null, password = null;
 
-          //Parse the queryString to not read the request body calling getParameter from httpServletRequest
-            Map<String,String> pars=  splitQuery(httpServletRequest.getQueryString());
+            //Parse the queryString to not read the request body calling getParameter from httpServletRequest
+            Map<String, String> pars = splitQuery(httpServletRequest.getQueryString());
 
-            for (String  key : pars.keySet()) {
+            for (String key : pars.keySet()) {
 
                 String value = pars.get(key);
 
@@ -498,10 +499,10 @@ public class HTTPProxy extends HttpServlet {
      * Sets up the given {@link PostMethod} to send the same multipart POST data as was sent in the given {@link HttpServletRequest}
      *
      * @param postMethodProxyRequest The {@link PostMethod} that we are configuring to send a multipart POST request
-     * @param httpServletRequest The {@link HttpServletRequest} that contains the mutlipart POST data to be sent via the {@link PostMethod}
+     * @param httpServletRequest     The {@link HttpServletRequest} that contains the mutlipart POST data to be sent via the {@link PostMethod}
      */
     private void handleMultipart(HttpRequestBase methodProxyRequest,
-            HttpServletRequest httpServletRequest) throws ServletException {
+                                 HttpServletRequest httpServletRequest) throws ServletException {
 
         // ////////////////////////////////////////////
         // Create a factory for disk-based file items
@@ -592,35 +593,35 @@ public class HTTPProxy extends HttpServlet {
      * Sets up the given {@link PostMethod} to send the same standard POST data as was sent in the given {@link HttpServletRequest}
      *
      * @param postMethodProxyRequest The {@link PostMethod} that we are configuring to send a standard POST request
-     * @param httpServletRequest The {@link HttpServletRequest} that contains the POST data to be sent via the {@link PostMethod}
+     * @param httpServletRequest     The {@link HttpServletRequest} that contains the POST data to be sent via the {@link PostMethod}
      * @throws IOException
      */
     private void handleStandard(HttpRequestBase methodProxyRequest,
-            HttpServletRequest httpServletRequest) throws IOException {
-		  try {
+                                HttpServletRequest httpServletRequest) throws IOException {
+        try {
 
-			  if(methodProxyRequest instanceof HttpPost){
-                  ((HttpPost) methodProxyRequest).setEntity(new InputStreamEntity(httpServletRequest.getInputStream()));
-              } else if (methodProxyRequest instanceof HttpPut){
-			      ((HttpPut) methodProxyRequest).setEntity(new InputStreamEntity(httpServletRequest.getInputStream()));
-              }
+            if (methodProxyRequest instanceof HttpPost) {
+                ((HttpPost) methodProxyRequest).setEntity(new InputStreamEntity(httpServletRequest.getInputStream()));
+            } else if (methodProxyRequest instanceof HttpPut) {
+                ((HttpPut) methodProxyRequest).setEntity(new InputStreamEntity(httpServletRequest.getInputStream()));
+            }
 
-		  } catch (IOException e) {
-		      throw new IOException(e);
-		  }
+        } catch (IOException e) {
+            throw new IOException(e);
+        }
     }
 
     /**
      * Executes the {@link HttpMethod} passed in and sends the proxy response back to the client via the given {@link HttpServletResponse}
      *
      * @param httpMethodProxyRequest An object representing the proxy request to be made
-     * @param httpServletResponse An object by which we can send the proxied response back to the client
+     * @param httpServletResponse    An object by which we can send the proxied response back to the client
      * @param digest
      * @throws ServletException Can be thrown to indicate that another error has occurred
      */
     private void executeProxyRequest(HttpRequestBase httpMethodProxyRequest,
-            HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-            String user, String password) throws ServletException {
+                                     HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+                                     String user, String password) throws ServletException {
 
 //        httpMethodProxyRequest.setConfig(connectionConfig);
         if (user != null && password != null) {
@@ -729,26 +730,26 @@ public class HTTPProxy extends HttpServlet {
 
             inputStreamServerResponse = response.getEntity().getContent();
 
-            if(inputStreamServerResponse != null){
+            if (inputStreamServerResponse != null) {
                 byte[] b = new byte[proxyConfig.getDefaultStreamByteSize()];
 
                 int read = 0;
                 ServletOutputStream out = httpServletResponse.getOutputStream();
-    		    while((read = inputStreamServerResponse.read(b)) > 0){
-    		      	out.write(b, 0, read);
-    		    }
+                while ((read = inputStreamServerResponse.read(b)) > 0) {
+                    out.write(b, 0, read);
+                }
             }
 
         } catch (Exception e) {
             LOGGER.error("Error executing HTTP method", e);
         } finally {
-			try {
-	        	if(inputStreamServerResponse != null)
-	        		inputStreamServerResponse.close();
-			} catch (IOException e) {
+            try {
+                if (inputStreamServerResponse != null)
+                    inputStreamServerResponse.close();
+            } catch (IOException e) {
                 LOGGER.error("Error closing request input stream", e);
-				throw new ServletException(e.getMessage());
-			}
+                throw new ServletException(e.getMessage());
+            }
 
             httpMethodProxyRequest.releaseConnection();
         }
@@ -766,7 +767,7 @@ public class HTTPProxy extends HttpServlet {
     /**
      * Retrieves all of the headers from the servlet request and sets them on the proxy request
      *
-     * @param httpServletRequest The request object representing the client's request to the servlet engine
+     * @param httpServletRequest     The request object representing the client's request to the servlet engine
      * @param httpMethodProxyRequest The request that we are about to send to the proxy host
      * @return ProxyInfo
      */
@@ -840,7 +841,7 @@ public class HTTPProxy extends HttpServlet {
         return proxyInfo;
     }
 
-    private Map<String,String> splitQuery(String query) throws UnsupportedEncodingException {
+    private Map<String, String> splitQuery(String query) throws UnsupportedEncodingException {
         Map<String, String> query_pairs = new LinkedHashMap<String, String>();
 
         String[] pairs = query.split("&");
@@ -850,24 +851,27 @@ public class HTTPProxy extends HttpServlet {
         }
         return query_pairs;
     }
+
     /**
      * @return int the maximum file upload size.
      */
     public int getMaxFileUploadSize() {
         return maxFileUploadSize;
     }
+
     /**
      * @return the client
      */
     public HttpClient getHttpClient() {
-		return httpClient;
-	}
+        return httpClient;
+    }
 
     /**
      * set the httpClient
+     *
      * @param httpClient the client to set
      */
-	public void setHttpClient(HttpClient httpClient) {
-		this.httpClient = httpClient;
-	}
+    public void setHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
 }
